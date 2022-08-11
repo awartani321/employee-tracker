@@ -12,6 +12,8 @@ async function connectDatabase() {
             database: 'employees',
             port: 3306
         });
+
+        await promptActions();
         
 
         connection.close();
