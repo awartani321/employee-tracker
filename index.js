@@ -69,12 +69,29 @@ async function promptActions() {
         if (res.action == "Add An Employee")
             await addEmployee();
 
-
         if (res.action == "Update Employee Role")
             await updateEmployeeRole();
 
         if (res.action == "Update Employee")
             await updateEmployee();
+
+        if (res.action == "View Employees By Manager")
+            await displayAllEmployeesByManager();
+
+        if (res.action == "View Employees By Department")
+            await displayAllEmployeesByDepartment();
+
+        if (res.action == "Delete A Department")
+            await deleteDepartment();
+
+        if (res.action == "Delete A Role")
+            await deleteRole();
+
+        if (res.action == "Delete An Employee")
+            await deleteEmployee();
+
+        if (res.action == "Department Budget")
+            await displayBudgetInDepartment();
 
 
     }
@@ -374,6 +391,164 @@ async function updateEmployee() {
 
 }
 
+async function displayAllEmployeesByManager() {
+    const [rows, fields] = await connection.execute(`
+                    SELECT a.id AS employee_id, a.first_name, a.last_name, b.title AS job, c.name AS department, b.salary, CONCAT(d.first_name, " ", d.last_name) AS manager
+                    FROM employee AS a
+                    LEFT JOIN role AS b ON a.role_id = b.id
+                    LEFT JOIN department AS c ON b.department_id = c.id
+                    LEFT JOIN employee AS d ON a.manager_id = d.id
+                    ORDER BY a.manager_id, a.id                    
+            `, []);
+    console.log("")
+    console.table(rows);
+}
+
+async function displayAllEmployeesByDepartment() {
+    const [rows, fields] = await connection.execute(`
+                    SELECT a.id AS employee_id, a.first_name, a.last_name, b.title AS job, c.name AS department, b.salary, CONCAT(d.first_name, " ", d.last_name) AS manager
+                    FROM employee AS a
+                    LEFT JOIN role AS b ON a.role_id = b.id
+                    LEFT JOIN department AS c ON b.department_id = c.id
+                    LEFT JOIN employee AS d ON a.manager_id = d.id
+                    ORDER BY b.department_id, a.id                    
+            `, []);
+    console.log("")
+    console.table(rows);
+}
+
+
+async function deleteDepartment() {
+    const res = await inquirer
+        .prompt([
+            //name
+            {
+                type: "input",
+                name: "name",
+                message: "What is the name of the department for delete?",
+                validate: (val) => {
+                    if (val) {
+                        return true;
+                    } else {
+                        console.log("\nDepartment's name again.");
+                        return false;
+                    }
+                },
+            }
+        ]);
+
+    try {
+        await connection.execute(`DELETE FROM department Where name = ?`, [res.name]);
+        console.log(`Deleted ${res.name} from the database`);
+    } catch (err) {
+        console.log(`Failed to delete department "${res.name}"`);
+    }
+
+}
+
+
+async function deleteRole() {
+    const res = await inquirer
+        .prompt([
+            //title
+            {
+                type: "input",
+                name: "title",
+                message: "What is the title of the role for delete?",
+                validate: (val) => {
+                    if (val) {
+                        return true;
+                    } else {
+                        console.log("\nRole's title again.");
+                        return false;
+                    }
+                },
+            },
+        ]);
+
+    try {
+        await connection.execute(`DELETE FROM role Where title = ?`, [res.title]);
+        console.log(`Deleted ${res.title} from the database`);
+    } catch (err) {
+        console.log(`Failed to delete role "${res.title}"`);
+    }
+}
+
+
+async function deleteEmployee() {
+    const res = await inquirer
+        .prompt([
+            //first_name
+            {
+                type: "input",
+                name: "first_name",
+                message: "What is the employee's first name?",
+                validate: (val) => {
+                    if (val) {
+                        return true;
+                    } else {
+                        console.log("\Employee's First Name again.");
+                        return false;
+                    }
+                },
+            },
+            //last_name
+            {
+                type: "input",
+                name: "last_name",
+                message: "What is the employee's last name?",
+                validate: (val) => {
+                    if (val) {
+                        return true;
+                    } else {
+                        console.log("\Employee's Last Name again.");
+                        return false;
+                    }
+                },
+            },
+        ]);
+
+    try {
+        await connection.execute(`DELETE FROM employee Where first_name = ? and last_name = ?`, [res.first_name, res.last_name]);
+        console.log(`Deleted ${res.first_name} ${res.last_name} from the database`);
+    } catch (err) {
+        console.log(`Failed to delete employee "${res.first_name} ${res.last_name}"`);
+    }
+}
+
+async function displayBudgetInDepartment() {
+    const res = await inquirer
+        .prompt([
+            //name
+            {
+                type: "input",
+                name: "name",
+                message: "What is the name of the department?",
+                validate: (val) => {
+                    if (val) {
+                        return true;
+                    } else {
+                        console.log("\nDepartment's name again.");
+                        return false;
+                    }
+                },
+            }
+        ]);
+
+    try {
+        const [rows, fields] = await connection.execute(`
+            SELECT SUM(b.salary) as salary
+            FROM employee AS a            
+            LEFT JOIN role AS b ON a.role_id = b.id
+            LEFT JOIN department AS c ON b.department_id = c.id
+            WHERE c.name = ?            
+        `, [res.name]);
+        console.log(`Department ${res.name}'s Total Untilized Budget is ${rows[0]['salary']}`);
+    } catch (err) {
+        console.log(`Failed to get salary department "${res.name}"`);
+    }
+
+}
 
 connectDatabase();
 
