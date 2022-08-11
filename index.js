@@ -69,6 +69,14 @@ async function promptActions() {
         if (res.action == "Add An Employee")
             await addEmployee();
 
+
+        if (res.action == "Update Employee Role")
+            await updateEmployeeRole();
+
+        if (res.action == "Update Employee")
+            await updateEmployee();
+
+
     }
 }
 
@@ -267,7 +275,104 @@ async function addEmployee() {
 
 }
 
+async function updateEmployeeRole() {
+    const [rows, fields] = await connection.execute(`Select * From employee`, []);
+    const res = await inquirer
+        .prompt([
+            {
+                type: "list",
+                name: "user",
+                message: "What would you like to do?",
+                choices: rows.map(row => row['first_name'] + ' ' + row['last_name'])
+            },
 
+        ]);
+
+    // console.log(res.user);
+
+    const [rows1, fields1] = await connection.execute(`Select * From role`, []);
+
+    const res1 = await inquirer
+        .prompt([
+            {
+                type: "list",
+                name: "title",
+                message: "Which role do you want?",
+                choices: rows1.map(row => row['title']),
+            }
+        ]);
+
+    const [rows2, fields2] = await connection.execute(`Select * From employee Where CONCAT(first_name, " ", last_name) = ?`, [res.user]);
+    const [rows3, fields3] = await connection.execute(`Select * From role Where title = ?`, [res1.title]);
+
+    const employee_id = rows2.length > 0 ? rows2[0]['id'] : 0;
+    const role_id = rows3.length > 0 ? rows3[0]['id'] : 0;
+
+    // console.log(employee_id, role_id);
+
+
+    await connection.execute(`Update employee Set role_id = ? Where id = ?`, [role_id, employee_id]);
+
+    console.log(`Updated ${res.user}'role to the database`);
+
+}
+
+// Bonus
+async function updateEmployee() {
+    const [rows, fields] = await connection.execute(`Select * From employee`, []);
+    const res = await inquirer
+        .prompt([
+            {
+                type: "list",
+                name: "user",
+                message: "What would you like to do?",
+                choices: rows.map(row => row['first_name'] + ' ' + row['last_name'])
+            },
+
+        ]);
+
+    const res1 = await inquirer
+        .prompt([
+            //first_name
+            {
+                type: "input",
+                name: "first_name",
+                message: "What is the employee's first name?",
+                validate: (val) => {
+                    if (val) {
+                        return true;
+                    } else {
+                        console.log("\Employee's First Name again.");
+                        return false;
+                    }
+                },
+            },
+            //last_name
+            {
+                type: "input",
+                name: "last_name",
+                message: "What is the employee's last name?",
+                validate: (val) => {
+                    if (val) {
+                        return true;
+                    } else {
+                        console.log("\Employee's Last Name again.");
+                        return false;
+                    }
+                },
+            }
+        ]);
+
+
+    const [rows2, fields2] = await connection.execute(`Select * From employee Where CONCAT(first_name, " ", last_name) = ?`, [res.user]);
+
+    const employee_id = rows2.length > 0 ? rows2[0]['id'] : 0;
+
+    await connection.execute(`Update employee Set first_name = ?, last_name = ? Where id = ?`, [res1.first_name, res1.last_name, employee_id]);
+
+    console.log(`Updated Employee ${employee_id}'s info in the database`);
+
+}
 
 
 connectDatabase();
