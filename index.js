@@ -8,9 +8,9 @@ async function connectDatabase() {
         connection = await mysql.createConnection({
             host: 'localhost',
             user: 'root',
-            password: '',
+            password: 'Gscfc123.',
             database: 'employees',
-            port: 3307
+            port: 3306
         });
         
 
