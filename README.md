@@ -23,4 +23,7 @@
 * WHEN I choose to update an employee role
 * THEN I am prompted to select an employee to update and their new role and this information is updated in the database
 
+### Screenshot and Tutorial :
+<img width="1440" alt="Screen Shot 2022-08-13 at 1 22 28 PM" src="https://user-images.githubusercontent.com/103685355/184504390-4697f8d6-9437-4a73-a74a-28fdc4eb95c9.png">
+
 ### Github Repo : https://github.com/awartani321/employee-tracker.git
