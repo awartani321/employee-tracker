@@ -7,7 +7,7 @@ This application allows you to track employees, budget, position and the manager
 
 * Clone the repo into your terminal.
 * Open terminal in root directory of the repo.
-* Run NPM install to install dependencies.
+* Run npm install to install dependencies.
 
 ### HOW TO USE
 
