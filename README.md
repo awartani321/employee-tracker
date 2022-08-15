@@ -26,6 +26,10 @@
 ### Screenshot and Tutorial :
 <img width="1440" alt="Screen Shot 2022-08-13 at 1 22 28 PM" src="https://user-images.githubusercontent.com/103685355/184504390-4697f8d6-9437-4a73-a74a-28fdc4eb95c9.png">
 
-### Video https://www.youtube.com/watch?v=a2r3WZPoKsc
+How to seeds data on Database
+### https://www.youtube.com/watch?v=kLuD-LcgXc8
+### Video https://www.youtube.com/watch?v=a2r3WZPosc
+
+
 
 ### Github Repo : https://github.com/awartani321/employee-tracker.git
