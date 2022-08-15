@@ -22,7 +22,7 @@ This application allows you to track employees, budget, position and the manager
 * Application walkthrough
 https://www.youtube.com/watch?v=a2r3WZPoKsc
 * How to seed the database
-https://www.youtube.com/watch?v=kLuD-LcgXc8
+https://www.youtube.com/watch?v=szalWUVMans
 
 
 
