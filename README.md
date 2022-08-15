@@ -28,7 +28,7 @@
 
 How to seeds data on Database
 ### https://www.youtube.com/watch?v=kLuD-LcgXc8
-### Video https://www.youtube.com/watch?v=a2r3WZPosc
+### Video https://www.youtube.com/watch?v=a2r3WZPoKsc
 
 
 
